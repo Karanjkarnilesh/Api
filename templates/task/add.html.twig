@@ -1,0 +1,26 @@
+{% include "base.html.twig" %}
+<div class="example-wrapper">
+ 
+<div class="container p-4">
+
+<div class="" style="text-align:end">
+<a class="btn btn-primary" href="{{path('tasklist')}}">Get All List</a>
+</div>
+<form method="post" action="{{ path('task') }}">
+  <div class="mb-3">
+    <label for="exampleInputusername" class="form-label">Username</label>
+    <input type="text" class="form-control" name="_username"  id="exampleInputusername" aria-describedby="emailHelp">
+  </div>
+   <div class="mb-3">
+    <label for="exampleInputlast" class="form-label">Lastname</label>
+    <input type="text" name="_lastname" class="form-control" id="exampleInputlast" aria-describedby="emailHelp">
+  </div>
+   <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Email</label>
+    <input type="email" name="_email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+
+</form>
+</div>
+</div>

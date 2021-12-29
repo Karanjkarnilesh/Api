@@ -1,0 +1,21 @@
+{% include "base.html.twig" %}
+<div class="example-wrapper">
+ 
+<div class="container p-4">
+<form method="post" action="{{ path('taskupdate', {'id':students.getId() }) }}">
+  <div class="mb-3">
+    <label for="exampleInputusername" class="form-label">Username</label>
+    <input type="text" class="form-control" name="_username" value="{{students.getStudentName()}}" id="exampleInputusername" aria-describedby="emailHelp">
+  </div>
+   <div class="mb-3">
+    <label for="exampleInputlast" class="form-label">Lastname</label>
+    <input type="text" name="_lastname" class="form-control" value="{{students.getStudentLast}}" id="exampleInputlast" aria-describedby="emailHelp">
+  </div>
+   <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Email</label>
+    <input type="email" name="_email" class="form-control" value="{{students.getStudentEmail()}}" id="exampleInputEmail1" aria-describedby="emailHelp">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+</div>
+</div>
