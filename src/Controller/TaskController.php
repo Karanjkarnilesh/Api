@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Student;
 use App\Repository\StudentRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,9 +30,9 @@ class TaskController extends AbstractController
             $student->setStudentEmail($email);
             $entityManager->persist($student);
             $entityManager->flush();
-            $student = $studentRepository->findAll();
+            
             return $this->render('task/list.html.twig',[
-                'students'=>$student
+                'students'
             ]);
         }
         return $this->render('task/add.html.twig');
@@ -86,6 +87,22 @@ class TaskController extends AbstractController
         $entityManager->remove($student);
         $entityManager->flush();
         $student = $studentRepository->findAll();
+        return $this->render('task/list.html.twig', [
+            'students' => $student,
+        ]);
+    }
+
+     /**
+     * @Route("/search", name="tasksearch")
+     */
+    public function search(ManagerRegistry $doctrine, StudentRepository $studentRepository,Request $request)
+    {
+        // $entityManager = $doctrine->getManager();
+        $search=$request->request->get('_search');
+        // $repo = $entityManager->getRepository(Student::class);
+    
+        
+        $student = $studentRepository->search($search);
         return $this->render('task/list.html.twig', [
             'students' => $student,
         ]);

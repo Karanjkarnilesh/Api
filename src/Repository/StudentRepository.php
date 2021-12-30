@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Student;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Expr\Comparison;
 
 /**
  * @method Student|null find($id, $lockMode = null, $lockVersion = null)
@@ -25,36 +27,44 @@ class StudentRepository extends ServiceEntityRepository
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+    return $this->createQueryBuilder('s')
+    ->andWhere('s.exampleField = :val')
+    ->setParameter('val', $value)
+    ->orderBy('s.id', 'ASC')
+    ->setMaxResults(10)
+    ->getQuery()
+    ->getResult()
+    ;
     }
-    */
+     */
 
     /*
     public function findOneBySomeField($value): ?Student
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+    return $this->createQueryBuilder('s')
+    ->andWhere('s.exampleField = :val')
+    ->setParameter('val', $value)
+    ->getQuery()
+    ->getOneOrNullResult()
+    ;
     }
-    */
+     */
 
+    /**
+     * @return Student[] Returns an array of Student objects
+     */
+    public function search(string $value):array
+    {
+
+ 
+
+        $criteria = Criteria::create()
+        ->where(new Comparison('student_name', Comparison::CONTAINS, $value))
+        ->orWhere(new Comparison('student_email', Comparison::CONTAINS, $value))
+        ->orWhere(new Comparison('student_last', Comparison::CONTAINS, $value));
+        return $this->matching($criteria)->toArray();
 
     
-    // public function findAll(): ?Student
-    // {
-    //     return $this->createQueryBuilder('s')
-    //         ->getQuery()
-    //         ->getOneOrNullResult()
-    //     ;
-    // }
+    }
+
 }

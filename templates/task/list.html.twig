@@ -4,6 +4,7 @@
 {% if students %}
 <div class="container m-4">
 <div style="text-align:end">
+
 <a href="{{path('task')}}" class="btn btn-primary">Add</a>
 </div>
  <table class="table">
@@ -29,6 +30,15 @@
    
   </tbody>
 </table>
+<form method="post" action="{{path('tasksearch')}}">
+<div class="row">
+  <div class="mb-3 " style="text-align:end">    
+   <input type="text" class="" name="_search" id="search">
+ <button type="submit" class="btn btn-primary">Search</button>
+</div>
+ </div>
+</form>
+
 </div>
 {% endif %}
 </div>
