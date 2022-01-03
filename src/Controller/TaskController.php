@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Student;
 use App\Repository\StudentRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,32 +17,31 @@ class TaskController extends AbstractController
      */
     public function index(ManagerRegistry $doctrine, Request $request, StudentRepository $studentRepository): Response
     {
-        if ($request->isMethod('POST')) {
-            $entityManager = $doctrine->getManager();
-            $username = $request->request->get('_username');
-            $last = $request->request->get('_lastname');
-            $email = $request->request->get('_email');
-            $student = new Student();
-            $student->setStudentId(2);
-            $student->setStudentName($username);
-            $student->setStudentLast($last);
-            $student->setStudentEmail($email);
-            $entityManager->persist($student);
-            $entityManager->flush();
-            
-            return $this->render('task/list.html.twig',[
-                'students'
-            ]);
-        }
-        return $this->render('task/add.html.twig');
+        // if ($request->isMethod('POST')) {
+        //     $entityManager = $doctrine->getManager();
+        //     $username = $request->request->get('_username');
+        //     $last = $request->request->get('_lastname');
+        //     $email = $request->request->get('_email');
+        //     $student = new Student();
+        //     $student->setStudentId(2);
+        //     $student->setStudentName($username);
+        //     $student->setStudentLast($last);
+        //     $student->setStudentEmail($email);
+        //     $entityManager->persist($student);
+        //     $entityManager->flush();
+
+        //     return $this->render('task/list.html.twig',[
+        //         'students'=>$student
+        //     ]);
+        // }
+        return $this->render('task/index.html.twig');
     }
 
-     /**
+    /**
      * @Route("/list", name="tasklist")
      */
 
-    public function list(StudentRepository $studentRepository)
-    {
+    function list(StudentRepository $studentRepository) {
         $student = $studentRepository->findAll();
         return $this->render('task/list.html.twig', [
             'students' => $student,
@@ -68,11 +66,11 @@ class TaskController extends AbstractController
             $entityManager->persist($student);
             $entityManager->flush();
             $student = $studentRepository->findAll();
-            return $this->render('task/list.html.twig',[
-                'students'=>$student
+            return $this->render('task/list.html.twig', [
+                'students' => $student,
             ]);
         }
-      
+
         return $this->render('task/edit.html.twig', [
             'students' => $student,
         ]);
@@ -92,19 +90,44 @@ class TaskController extends AbstractController
         ]);
     }
 
-     /**
+    /**
      * @Route("/search", name="tasksearch")
      */
-    public function search(ManagerRegistry $doctrine, StudentRepository $studentRepository,Request $request)
+    public function search(ManagerRegistry $doctrine, StudentRepository $studentRepository, Request $request)
     {
         // $entityManager = $doctrine->getManager();
-        $search=$request->request->get('_search');
+        $search = $request->request->get('_search');
         // $repo = $entityManager->getRepository(Student::class);
-    
-        
+
         $student = $studentRepository->search($search);
         return $this->render('task/list.html.twig', [
             'students' => $student,
         ]);
     }
+
+    /**
+     * @Route("/add", name="taskadd")
+     */
+    public function add(ManagerRegistry $doctrine, Request $request, StudentRepository $studentRepository): Response
+    {
+        if ($request->isMethod('POST')) {
+            $entityManager = $doctrine->getManager();
+            $username = $request->request->get('_username');
+            $last = $request->request->get('_lastname');
+            $email = $request->request->get('_email');
+            $student = new Student();
+            $student->setStudentId(2);
+            $student->setStudentName($username);
+            $student->setStudentLast($last);
+            $student->setStudentEmail($email);
+            $entityManager->persist($student);
+            $entityManager->flush();
+            $student = $studentRepository->findAll();
+            return $this->render('task/list.html.twig', [
+                'students' => $student,
+            ]);
+        }
+        return $this->render('task/add.html.twig');
+    }
+
 }
