@@ -15,14 +15,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class StudentController extends AbstractController
 {
-    protected $teacherRepository;
-    protected $studentRepository;
-    protected $doctrine;
-    public function __construct(ManagerRegistry $doctrine, StudentRepository $studentRepository, TeacherRepository $teacherRepository)
+    public function __construct(ManagerRegistry $doctrine, StudentRepository $studentRepository)
     {
         $this->studentRepository = $studentRepository;
-        $this->doctrine = $doctrine;
-        $this->teacherRepository = $teacherRepository;
     }
     /**
      * @Route("/task", name="task")
@@ -37,20 +32,18 @@ class StudentController extends AbstractController
      * @Route("/list", name="tasklist",methods={"GET"})
      */
 
-    function list(): JsonResponse {
+    function list() {
         $student = $this->studentRepository->findAll();
         // return $this->render('task/list.html.twig', [
         //     'students' => $student,
         // ]);
-        // $student=json_encode($student);
-        return new JsonResponse($student);
+        return new JsonResponse(['result' => 'ok', 'ret' => ['students' => $student]]);
     }
     /**
      * @Route("/update/{id}", name="taskupdate",methods={"PUT"})
      */
     public function update(ManagerRegistry $doctrine, int $id, Request $request)
     {
-
         $entityManager = $doctrine->getManager();
         $student = $doctrine->getRepository(Student::class)->find($id);
         $username = $request->request->get('_username');
@@ -74,15 +67,18 @@ class StudentController extends AbstractController
                 'students' => $student,
             ]);
         }
-        return new JsonResponse($student, Response::HTTP_OK);
+
+        return $this->render('task/edit.html.twig', [
+            'students' => $student,
+        ]);
     }
     /**
      * @Route("/delete/{id}", name="taskdelete",methods={"DELETE"})
      */
-    public function delete(int $id)
+    public function delete(ManagerRegistry $doctrine, int $id)
     {
-        $entityManager = $this->doctrine->getManager();
-        $student = $this->doctrine->getRepository(Student::class)->find($id);
+        $entityManager = $doctrine->getManager();
+        $student = $doctrine->getRepository(Student::class)->find($id);
         // dd($student);
         $entityManager->remove($student);
         $entityManager->flush();
@@ -93,12 +89,14 @@ class StudentController extends AbstractController
     }
 
     /**
-     * @Route("/search", name="tasksearch",methods={"POST"} )
+     * @Route("/search", name="tasksearch")
      */
-    public function search(Request $request)
+    public function search(ManagerRegistry $doctrine, StudentRepository $studentRepository, Request $request)
     {
-
+        // $entityManager = $doctrine->getManager();
         $search = $request->request->get('_search');
+        // $repo = $entityManager->getRepository(Student::class);
+
         $student = $this->studentRepository->search($search);
         return $this->render('task/list.html.twig', [
             'students' => $student,
@@ -106,59 +104,51 @@ class StudentController extends AbstractController
     }
 
     /**
-     * @Route("/add", name="taskadd")
+     * @Route("/add", name="taskadd",methods={"POST"})
      */
-    public function add(Request $request): JsonResponse
+    public function add(ManagerRegistry $doctrine, Request $request): Response
     {
-        $data = json_decode($request->getContent(), true);
-        dd($data);
-        // dd($data['username']);
         if ($request->isMethod('POST')) {
-            $entityManager = $this->doctrine->getManager();
+            $entityManager = $doctrine->getManager();
             $username = $request->request->get('_username');
             $last = $request->request->get('_lastname');
             $email = $request->request->get('_email');
             $class = $request->request->get('_studentclass');
             $student = new Student();
             // $teacher=new Teacher();
-            dump($username);
-            dump($last);
-            dump($email);
-            dump($class);
-// dd();
-            $student->setStudentId("2");
+
+            $student->setStudentId(2);
             $student->setStudentName($username);
             $student->setStudentLast($last);
             $student->setStudentEmail($email);
             $student->setStudentClass($class);
-            dd($student);
+            // $teacher->setStudent($student);
             $entityManager->persist($student);
+            // $entityManager->persist($teacher);
             $entityManager->flush();
-            // $student = $this->studentRepository->findAll();
-            // return $this->render('task/list.html.twig', [
-            //     'students' => $student,
-            // ]);
-            return new JsonResponse($student, Response::HTTP_OK);
+            $student = $this->studentRepository->findAll();
+            return $this->render('task/list.html.twig', [
+                'students' => $student,
+            ]);
         }
-        // return new JsonResponse($student, Response::HTTP_OK);
         return $this->render('task/add.html.twig');
     }
 
     /**
      * @Route("/getteacher/{id}", name="taskGetTeacher")
      */
-    public function getTeacher(Request $request, int $id)
+    public function getTeacher(ManagerRegistry $doctrine, StudentRepository $studentRepository, Request $request, int $id, TeacherRepository $teacherRepository)
     {
-        $entityManager = $this->doctrine->getManager();
+        $entityManager = $doctrine->getManager();
 
         $student = new Student();
         // $teacher = new Teacher();
-        $student = $this->doctrine->getRepository(Student::class)->find($id);
+        $student = $doctrine->getRepository(Student::class)->find($id);
         $student_class = $student->getStudentClass();
-        $teachers = $this->doctrine->getRepository(Teacher::class)->findBy(['class' => $student_class]);
-        return $this->render('task/teacherlist.html.twig', [
-            'teachers' => $teachers,
-        ]);
+        $teachers = $doctrine->getRepository(Teacher::class)->findBy(['class' => $student_class]);
+            return $this->render('task/teacherlist.html.twig', [
+                'teachers' => $teachers,
+            ]);
     }
 
 }

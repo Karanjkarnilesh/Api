@@ -31,9 +31,13 @@ services:
             # if the value of a string argument starts with '@', you need to escape
             # it by adding another '@' so Symfony doesn't consider it a service
             # the following example would be parsed as the string '@securepassword'
+<<<<<<< HEAD
             # - '@@securepassword'
 
     # app.command.wall-setup:
     #     class: Command/UpdateCommand
     #     tags:
     #     - {name: console.command}
+=======
+            # - '@@securepassword'
+>>>>>>> 0cd5fccd568bc982da98d7fd43fd495bb55cbd67
