@@ -23,3 +23,17 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Service\TeacherService:
+        arguments:
+            # this is not a string, but a reference to a service called 'logger'
+            - '@logger'
+
+            # if the value of a string argument starts with '@', you need to escape
+            # it by adding another '@' so Symfony doesn't consider it a service
+            # the following example would be parsed as the string '@securepassword'
+            # - '@@securepassword'
+
+    # app.command.wall-setup:
+    #     class: Command/UpdateCommand
+    #     tags:
+    #     - {name: console.command}

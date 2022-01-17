@@ -1,3 +1,4 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+# student_add:
+#    path: /add
+#    controller: App\Controller\StudentController::add
+#    method: [POST]

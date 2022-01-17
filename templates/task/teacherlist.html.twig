@@ -1,0 +1,37 @@
+{% include "base.html.twig" %}
+<pre>
+
+</pre>
+<div class="example-wrapper">
+<div class="container p-4">
+<h1>Teache About</h1>
+
+ <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">teacher name</th>
+      <th scope="col"> Subject</th>
+      <th scope="col">Class</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for key,teacher in teachers %}
+  {# {% if (teacher.getStudentClass()) %} #}
+  <tr>
+  <td>{{teacher.getId()}}</td>
+  <td>{{teacher.getName()}}</td>
+  {# {{dump(teacher.getSalary())}} #}
+  <td>{{teacher.getDesignation()}}</td>
+  <td>{{teacher.getClass()}}</td>
+  </tr>
+  
+  {# {% endif %} #}
+{% else %}
+     
+    {% endfor %}
+   
+  </tbody>
+</table>
+</div>
+</div>

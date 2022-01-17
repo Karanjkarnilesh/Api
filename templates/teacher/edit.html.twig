@@ -1,0 +1,37 @@
+{% include "base.html.twig" %}
+<div class="example-wrapper">
+ 
+<div class="container p-4">
+<h1> EditTeacher</h1>
+{% for label, messages in app.flashes(['success', 'warning']) %}
+    {% for message in messages %}
+        <div class="flash-{{ label }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
+<div class="" style="text-align:end">
+</div>
+<form method="post" action="{{ path('teacherupdate',{'id':teacher.getId()}) }}">
+  <div class="mb-3">
+    <label for="exampleInputusername" class="form-label">Name</label>
+    <input type="text" class="form-control" name="_name" value="{{teacher.getName()}}"  id="exampleInputusername" aria-describedby="emailHelp">
+  </div>
+   <div class="mb-3">
+    <label for="exampleInputlast" class="form-label">Salary</label>
+    <input type="text" name="_salary" class="form-control" value="{{teacher.getSalary()}}"  id="exampleInputlast" aria-describedby="emailHelp">
+  </div>
+   <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Designation</label>
+    <input type="text" name="_designation" class="form-control" value="{{teacher.getDesignation()}}"  id="exampleInputEmail1" aria-describedby="emailHelp">
+  </div>
+   <div class="mb-3">
+    <label for="exampleInputClass" class="form-label">Class</label>
+    <input type="text" name="_teacherclass" class="form-control"  value="{{teacher.getClass()}}"  id="exampleInputClass" >
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+
+</form>
+</div>
+
+</div>

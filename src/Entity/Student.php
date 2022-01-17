@@ -4,6 +4,16 @@ namespace App\Entity;
 
 use App\Repository\StudentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\OneToOne;
+use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\MappedSuperclass;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Entity\Teacher;
 
 /**
  * @ORM\Entity(repositoryClass=StudentRepository::class)
@@ -36,7 +46,21 @@ class Student
      * @ORM\Column(type="string", length=255)
      */
     private $student_email;
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $student_class;
 
+    //  /**
+    //  * One Student has Many teachers.
+    //  * @ORM\OneToMany(targetEntity="Teacher", mappedBy="student"))
+    //  */
+    // private $teachers;
+       
+
+    // public function __construct() {
+    //     $this->teachers = new ArrayCollection();
+    // }
     public function getId(): ?int
     {
         return $this->id;
@@ -89,4 +113,26 @@ class Student
 
         return $this;
     }
+    public function getStudentClass(): ?string
+    {
+        return $this->student_class;
+    }
+
+    public function setStudentClass(string $student_class): self
+    {
+        $this->student_class= $student_class;
+
+        return $this;
+    }
+    // public function getTeacher()
+    // {
+    //     return $this->teachers;
+    // }
+
+    // public function setTeacher(ArrayCollection $events): self
+    // {
+    //     $this->teachers= $teachers;
+
+    //     return $this;
+    // }
 }

@@ -14,6 +14,7 @@
       <th scope="col">student Name</th>
       <th scope="col"> Student Last</th>
       <th scope="col">Student Email</th>
+       <th scope="col">Student Class</th>
       <th scope="col">Action</th>
     </tr>
   </thead>
@@ -24,7 +25,8 @@
    <td>{{student.getStudentName()}}</td>
    <td>{{student.getStudentLast()}}</td>
    <td>{{student.getStudentEmail()}}</td>
-   <td><a class="btn btn-primary" href="{{ path('taskupdate', {'id':student.getId() }) }}">Edit </a> <a class="btn btn-danger" href="{{ path('taskdelete', {'id':student.getId() }) }}">Delete </a></td>
+   <td>{{student.getStudentClass()}}</td>
+   <td><a class="btn btn-primary" href="{{ path('taskupdate', {'id':student.getId() }) }}">Edit </a> <a class="btn btn-danger me-2" href="{{ path('taskdelete', {'id':student.getId() }) }}">Delete </a><a class="btn btn-primary" href="{{ path('taskGetTeacher', {'id':student.getId() }) }}">Get Class Teacher </a> </td>
     </tr>
     {% endfor %}
    

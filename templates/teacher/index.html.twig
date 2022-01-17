@@ -1,8 +1,9 @@
 {% include "base.html.twig" %}
-
-
 <div class="example-wrapper">
 <duv class="container p-4">
+
+<div class="text-center">
+<h1>Teacher Info</h1>
 {% for label, messages in app.flashes(['success', 'warning']) %}
     {% for message in messages %}
         <div class="flash-{{ label }}">
@@ -10,10 +11,8 @@
         </div>
     {% endfor %}
 {% endfor %}
-<div class="text-center">
-<h1>Student Info</h1>
-<a href="{{path('taskadd')}}" class="btn btn-primary me-2">Add</a>  
-<a class="btn btn-primary" href="{{path('tasklist')}}">Get All List</a>
+<a href="{{path('teachercreate')}}" class="btn btn-primary me-2">Add</a>  
+<a class="btn btn-primary" href="{{path('teacherlist')}}">Get All List</a>
 </div>
 </div>
 </div>

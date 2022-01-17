@@ -1,0 +1,38 @@
+{% include "base.html.twig" %}
+<div class="example-wrapper">
+ 
+<div class="container p-4">
+<h1> Add Teacher</h1>
+{% for label, messages in app.flashes(['success', 'warning']) %}
+    {% for message in messages %}
+        <div class="flash-{{ label }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
+<div class="" style="text-align:end">
+<a class="btn btn-primary" href="{{path('teacherlist')}}">Get All List</a>
+</div>
+<form method="post" action="{{ path('teachercreate') }}">
+  <div class="mb-3">
+    <label for="exampleInputusername" class="form-label">Name</label>
+    <input type="text" class="form-control" name="_name"  id="exampleInputusername" aria-describedby="emailHelp">
+  </div>
+   <div class="mb-3">
+    <label for="exampleInputlast" class="form-label">Salary</label>
+    <input type="text" name="_salary" class="form-control" id="exampleInputlast" aria-describedby="emailHelp">
+  </div>
+   <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Designation</label>
+    <input type="text" name="_designation" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+  </div>
+   <div class="mb-3">
+    <label for="exampleInputClass" class="form-label">Class</label>
+    <input type="text" name="_teacherclass" class="form-control" id="exampleInputClass" >
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+
+</form>
+</div>
+
+</div>
