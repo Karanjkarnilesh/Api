@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TeacherRepository;
+use DateTime;
+use Doctrine\DBAL\Types\DateType;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,6 +41,7 @@ class Teacher
 
     /**
      * @ORM\Column(type="datetime", length=255,nullable=true)
+     * * @var string A "Y-m-d H:i:s" formatted value
      */
     private $create_at;
 
@@ -113,9 +116,9 @@ class Teacher
         return $this;
     }
 
-    public function getCreateAt(): ?string
+    public function getCreateAt()
     {
-        return $this->create_at;
+        return($this->create_at);
     }
 
     public function setUpdateAt($update_at): self
@@ -125,19 +128,19 @@ class Teacher
         return $this;
     }
 
-    public function getUpdateAt(): ?string
+    public function getUpdateAt()
     {
-        return $this->update_at;
+        return ($this->update_at);
     }
 
-    public function getStudent()
-    {
-        return $this->student;
-    }
-    public function setStudent(Student $student): self
-    {
-        $this->student=$student;
-        return $this;
-    }
+    // public function getStudent(): ?string
+    // {
+    //     return $this->student;
+    // }
+    // public function setStudent(Student $student): self
+    // {
+    //     $this->student=$student;
+    //     return $this;
+    // }
 
 }
