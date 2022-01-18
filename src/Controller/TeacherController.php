@@ -38,12 +38,8 @@ class TeacherController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
       
-        // if ($request->isMethod('POST')) {
             $teacherObj = array();
-            // $teacherObj['Name'] = $request->request->get('_name');
-            // $teacherObj['Salary'] = $request->request->get('_salary');
-            // $teacherObj['Designation'] = $request->request->get('_designation');
-            // $teacherObj['Class'] = $request->request->get('_teacherclass');  
+        
             $teacherObj['Name']= $data['_name'];
             $teacherObj['Salary'] = $data['_salary'];
             $teacherObj['Designation']= $data['_designation'];
@@ -52,20 +48,14 @@ class TeacherController extends AbstractController
             $teacherObj['UpdateAt'] = new DateTime() ;
 
             $teacherObj = $this->teacherService->add($teacherObj);
-            // $this->addFlash('success', "Teacher Added Successfully");
-            // $teacherObj=$this->teacherService->getAll();
-            // return $this->render('teacher/list.html.twig', [
-            //     'teachers' => $teacherObj,
-            // ]);
-        // }
-
+         
 
         $student = $serializer->serialize($teacherObj, 'json');
         $response = new Response($student);
 
         $response->headers->set('Content-Type', 'application/json');
         return $response;
-        // return $this->render('teacher/add.html.twig');
+
     }
 
     /**
@@ -91,9 +81,7 @@ class TeacherController extends AbstractController
             $teacherObj = $this->teacherService->edit($teacherObj, $id);
             if ($teacherObj) {
                  $teacher=$this->teacherService->getAll($args);
-                // return $this->render('teacher/list.html.twig', [
-                //     'teachers' => $teacher,
-                // ]);
+             
                 $teacher = $serializer->serialize($teacher, 'json');
                 $response = new Response($teacher);
         
@@ -122,14 +110,7 @@ class TeacherController extends AbstractController
         if ($result=="Done") {
             
             return new JsonResponse(['status' => 'Teacher Delete'], Response::HTTP_OK);
-            // $this->addFlash('success', "Teacher Delete Successfully");
-            // $teacher = $this->teacherService->getAll();
-
-            // $teacher = $serializer->serialize($teacher, 'json');
-            // $response = new Response($teacher);
-    
-            // $response->headers->set('Content-Type', 'application/json');
-            // return $response;
+     
         }
         return new JsonResponse(['status' => 'teacher Not Avaliable'], Response::HTTP_OK);
     }
@@ -142,9 +123,7 @@ class TeacherController extends AbstractController
         $teacher = $this->teacherService->getAll();
 
         if (!empty($teacher)) {
-            // return $this->render('teacher/list.html.twig', [
-            //     'teachers' => $teacher,
-            // ]);
+           
             $teacher = $serializer->serialize($teacher, 'json');
             $response = new Response($teacher);
     
@@ -161,9 +140,6 @@ class TeacherController extends AbstractController
     {
         $search = $request->request->get('_search');
         $teacher = $this->teacherService->searchdata($search);
-        // return $this->render('teacher/list.html.twig', [
-        //     'teachers' => $teacher,
-        // ]);
         $teacher = $serializer->serialize($teacher, 'json');
         $response = new Response($teacher);
 
