@@ -26,7 +26,7 @@ services:
     App\Service\TeacherService:
         arguments:
             # this is not a string, but a reference to a service called 'logger'
-            - '@logger'
+            # - '@logger'
 
             # if the value of a string argument starts with '@', you need to escape
             # it by adding another '@' so Symfony doesn't consider it a service

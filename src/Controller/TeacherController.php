@@ -1,28 +1,25 @@
 <?php
 
 namespace App\Controller;
-
 use App\Entity\Teacher;
 use App\Repository\TeacherRepository;
 use App\Service\TeacherService;
 use DateTime;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class TeacherController extends AbstractController
 {
 
     private $teacherService;
-    private $teacherRepository;
-    private $doctrine;
-    public function __construct(TeacherService $teacherService, TeacherRepository $teacherRepository)
+  
+    public function __construct(TeacherService $teacherService)
     {
         $this->teacherService = $teacherService;
-
-        $this->teacherRepository = $teacherRepository;
     }
     /**
     * @Route("/teacher", name="teacher")
@@ -35,64 +32,73 @@ class TeacherController extends AbstractController
     }
 
     /**
-     * @Route("/teacher/create", name="teachercreate")
+     * @Route("/teacher/create", name="teachercreate",methods={"POST|GET"})
      */
-    public function create(Request $request)
+    public function create(Request $request, SerializerInterface $serializer):Response
     {
-        if ($request->isMethod('POST')) {
+        $data = json_decode($request->getContent(), true);
+      
+        // if ($request->isMethod('POST')) {
             $teacherObj = array();
-            $teacherObj['Name'] = $request->request->get('_name');
-            $teacherObj['Salary'] = $request->request->get('_salary');
-            $teacherObj['Designation'] = $request->request->get('_designation');
-
-            $teacherObj['Class'] = $request->request->get('_teacherclass');
-            $teacherObj['CreateAt'] = new DateTime();
-            $teacherObj['UpdateAt'] = new DateTime();
-            $teacherObj = $this->teacherService->add($teacherObj);
-           
-             $teacherObj=$this->teacherService->getAll($this->teacherRepository);
-           
-
-            $teacherObj['Class'] = $request->request->get('_teacherclass');  
+            // $teacherObj['Name'] = $request->request->get('_name');
+            // $teacherObj['Salary'] = $request->request->get('_salary');
+            // $teacherObj['Designation'] = $request->request->get('_designation');
+            // $teacherObj['Class'] = $request->request->get('_teacherclass');  
+            $teacherObj['Name']= $data['_name'];
+            $teacherObj['Salary'] = $data['_salary'];
+            $teacherObj['Designation']= $data['_designation'];
+            $teacherObj['Class']= $data['_studentclass'];
             $teacherObj['CreateAt'] = new DateTime();
             $teacherObj['UpdateAt'] = new DateTime() ;
+
             $teacherObj = $this->teacherService->add($teacherObj);
-            $this->addFlash('success', "Teacher Added Successfully");
-            $teacherObj = $this->teacherRepository->findAll();
-            return $this->render('teacher/list.html.twig', [
-                'teachers' => $teacherObj,
-            ]);
-        }
-        return $this->render('teacher/add.html.twig');
+            // $this->addFlash('success', "Teacher Added Successfully");
+            // $teacherObj=$this->teacherService->getAll();
+            // return $this->render('teacher/list.html.twig', [
+            //     'teachers' => $teacherObj,
+            // ]);
+        // }
+
+
+        $student = $serializer->serialize($teacherObj, 'json');
+        $response = new Response($student);
+
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+        // return $this->render('teacher/add.html.twig');
     }
 
     /**
-     * @Route("/teacher/update/{id}", name="teacherupdate")
+     * @Route("/teacher/update/{id}", name="teacherupdate",methods={"PUT"})
      */
-    public function update(Request $request, int $id,)
+    public function update(Request $request, int $id,SerializerInterface $serializer)
     {
-        $data = array();
-        $teacher = $this->doctrine->getRepository(Teacher::class)->find($id);
+        $data = json_decode($request->getContent(), true);
 
-        $data['Name'] = $request->request->get('_name');
-        $data['Salary'] = $request->request->get('_salary');
-        $data['Designation'] = $request->request->get('_designation');
-        $data['Class'] = $request->request->get('_teacherclass');
+        $args=[
+            'id'=>$id
+        ];
+        $teacher = $this->teacherService->getAll($args);
 
-        $data['UpdateAt'] = new DateTime();
-        if (($data['Name'] != '') && ($data['Salary'] != '') && ($data['Class'] != '')) {
-            $teacherObj = $this->teacherService->edit($data, $id);
+        $teacherObj['Name']= $data['_name'];
+        $teacherObj['Salary'] = $data['_salary'];
+        $teacherObj['Designation']= $data['_designation'];
+        $teacherObj['Class']= $data['_studentclass'];
+
+
+        $teacherObj['UpdateAt'] = new DateTime();
+        if (($teacherObj['Name'] != '') && ($teacherObj['Salary'] != '') && ($teacherObj['Class'] != '')) {
+            $teacherObj = $this->teacherService->edit($teacherObj, $id);
             if ($teacherObj) {
-                 $teacher=$this->teacherService->getAll();
-                // $data['UpdateAt'] = new DateTime() ;
-                // if (($data['Name'] != '') && ($data['Salary'] != '') && ($data['Class'] != '')) {
-                //     $teacherObj = $teacherService->edit($data,$id);
-                //     if ($teacherObj) {
-                //         $teacher = $this->teacherRepository->findAll();
-
-                return $this->render('teacher/list.html.twig', [
-                    'teachers' => $teacher,
-                ]);
+                 $teacher=$this->teacherService->getAll($args);
+                // return $this->render('teacher/list.html.twig', [
+                //     'teachers' => $teacher,
+                // ]);
+                $teacher = $serializer->serialize($teacher, 'json');
+                $response = new Response($teacher);
+        
+                $response->headers->set('Content-Type', 'application/json');
+                return $response;
                     
 
             }
@@ -106,46 +112,63 @@ class TeacherController extends AbstractController
     /**
      * @Route("/teacher/delete/{id}", name="teacherdelete",methods={"DELETE"})
      */
-    function delete(int $id) 
+    function delete(int $id,SerializerInterface $serializer) 
     {
-        $entityManager = $this->doctrine->getManager();
-        $student = $this->doctrine->getRepository(teacher::class)->find($id);
+        $args=[
+            'id'=>$id
+        ];
+        $student =$this->teacherService->getAll($args);
         $result = $this->teacherService->delete($student);
-        if (!empty($result)) {
-            $this->addFlash('success', "Teacher Delete Successfully");
-            $teacher = $this->teacherRepository->findAll();
+        if ($result=="Done") {
+            
+            return new JsonResponse(['status' => 'Teacher Delete'], Response::HTTP_OK);
+            // $this->addFlash('success', "Teacher Delete Successfully");
+            // $teacher = $this->teacherService->getAll();
 
-            return $this->render('teacher/list.html.twig', [
-                'teachers' => $teacher,
-            ]);
+            // $teacher = $serializer->serialize($teacher, 'json');
+            // $response = new Response($teacher);
+    
+            // $response->headers->set('Content-Type', 'application/json');
+            // return $response;
         }
+        return new JsonResponse(['status' => 'teacher Not Avaliable'], Response::HTTP_OK);
     }
         
     /**
      * @Route("/teacher/list", name="teacherlist")
      */
-    function teacherList()
+    function teacherList(SerializerInterface $serializer)
     {
         $teacher = $this->teacherService->getAll();
 
         if (!empty($teacher)) {
-            return $this->render('teacher/list.html.twig', [
-                'teachers' => $teacher,
-            ]);
+            // return $this->render('teacher/list.html.twig', [
+            //     'teachers' => $teacher,
+            // ]);
+            $teacher = $serializer->serialize($teacher, 'json');
+            $response = new Response($teacher);
+    
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
         }
-        return;
+        return new JsonResponse(['status'=>'Teacher Not Avaliable']);
     }
 
     /**
      * @Route("/teacher/search", name="teachersearch")
      */
-    function search(Request $request)
+    function search(Request $request,SerializerInterface $serializer)
     {
         $search = $request->request->get('_search');
-        $teacher = $this->teacherRepository->search($search);
-        return $this->render('teacher/list.html.twig', [
-            'teachers' => $teacher,
-        ]);
+        $teacher = $this->teacherService->searchdata($search);
+        // return $this->render('teacher/list.html.twig', [
+        //     'teachers' => $teacher,
+        // ]);
+        $teacher = $serializer->serialize($teacher, 'json');
+        $response = new Response($teacher);
+
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 
 }

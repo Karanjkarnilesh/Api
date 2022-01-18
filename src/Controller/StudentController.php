@@ -98,7 +98,7 @@ class StudentController extends AbstractController
     /**
      * @Route("/search", name="tasksearch",methods={"GET"})
      */
-    public function search(Request $request, SerializerInterface $serializer)
+    public function search(Request $request,SerializerInterface $serializer)
     {
         $data = json_decode($request->getContent(), true);
         $search = $data["_search"];
@@ -114,7 +114,7 @@ class StudentController extends AbstractController
     /**
      * @Route("/add", name="taskadd",methods={"POST|GET"})
      */
-    public function add(Request $request, SerializerInterface $serializer): Response
+    public function add(Request $request,SerializerInterface $serializer): Response
     {
         $data = json_decode($request->getContent(), true);
 
@@ -147,7 +147,7 @@ class StudentController extends AbstractController
     /**
      * @Route("/getteacher/{id}", name="taskGetTeacher",methods={"GET"})
      */
-    public function getTeacher(Request $request, int $id, SerializerInterface $serializer)
+    public function getTeacher(Request $request, int $id,SerializerInterface $serializer)
     {
         $entityManager = $this->doctrine->getManager();
 

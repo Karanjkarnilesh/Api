@@ -5,12 +5,9 @@ use App\Entity\Teacher;
 use App\Repository\TeacherRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class TeacherService
+class TeacherService 
 {
-
-    private $teacherRepository;
-    private $doctrine;
-    public function __construct(ManagerRegistry $doctrine,TeacherRepository $teacherRepository)
+    public function __construct(TeacherRepository $teacherRepository,ManagerRegistry $doctrine,)
     {
         $this->teacherRepository = $teacherRepository;
         $this->doctrine = $doctrine;
@@ -30,9 +27,7 @@ class TeacherService
 
             $entityManager->flush();
 
-            $teacher = $this->teacherRepository->findAll();
-
-            $teacher = $this->teacherRepository->findAll();
+            $teacher = $this->getAll();
 
 
             return $teacher;
@@ -75,9 +70,17 @@ class TeacherService
         }
     }
 
-    public function getAll()
+    public function getAll($args=array())
     {
-        return $this->teacherRepository->findAll();
+        if(!empty($args))
+        {
+            return $this->doctrine->getRepository(Teacher::class)->find($args);
+        }
+        return $this->doctrine->getRepository(Teacher::class)->findAll();
+    }
+    public function searchdata($search)
+    {
+        $this->teacherRepository->search($search);
     }
 
 }
