@@ -53,7 +53,7 @@ class TeacherService
             $teacher->setSalary($data['_salary']);
             $teacher->setDesignation($data['_designation']);
             $teacher->setClass($data['_studentclass']);
-            $teacherObj->set['UpdateAt'] = new DateTime() ;
+            $teacher->setUpdateAt(new DateTime()) ;
             $entityManager->persist($teacher);
             $entityManager->flush();
 
