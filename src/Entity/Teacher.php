@@ -4,11 +4,11 @@ namespace App\Entity;
 
 use App\Repository\TeacherRepository;
 use DateTime;
-use Doctrine\DBAL\Types\DateType;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=TeacherRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Teacher
 {
@@ -109,6 +109,7 @@ class Teacher
         return $this;
     }
 
+
     public function setCreateAt($create_at): self
     {
         $this->create_at = $create_at;
@@ -118,9 +119,9 @@ class Teacher
 
     public function getCreateAt()
     {
-        return($this->create_at);
+        return ($this->create_at);
     }
-
+  
     public function setUpdateAt($update_at): self
     {
         $this->update_at = $update_at;
@@ -141,6 +142,15 @@ class Teacher
     // {
     //     $this->student=$student;
     //     return $this;
+    // }
+
+
+    // /**
+    //  * @ORM\PrePersist
+    //  */
+    // public function setCreatedAtValue()
+    // {
+    //     $this->createdAt = new \DateTime();
     // }
 
 }

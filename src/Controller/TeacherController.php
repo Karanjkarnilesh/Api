@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Controller;
+
 use App\Entity\Teacher;
-use App\Repository\TeacherRepository;
 use App\Service\TeacherService;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,14 +16,16 @@ class TeacherController extends AbstractController
 {
 
     private $teacherService;
-  
-    public function __construct(TeacherService $teacherService)
+    private $serializer;
+
+    public function __construct(TeacherService $teacherService, SerializerInterface $serializer)
     {
         $this->teacherService = $teacherService;
+        $this->serializer = $serializer;
     }
     /**
-    * @Route("/teacher", name="teacher")
-    */
+     * @Route("/teacher", name="teacher")
+     */
 
     public function index()
     {
@@ -34,60 +36,45 @@ class TeacherController extends AbstractController
     /**
      * @Route("/teacher/create", name="teachercreate",methods={"POST|GET"})
      */
-    public function create(Request $request, SerializerInterface $serializer):Response
+    public function create(Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
-      
-            $teacherObj = array();
-        
-            $teacherObj['Name']= $data['_name'];
-            $teacherObj['Salary'] = $data['_salary'];
-            $teacherObj['Designation']= $data['_designation'];
-            $teacherObj['Class']= $data['_studentclass'];
-            $teacherObj['CreateAt'] = new DateTime();
-            $teacherObj['UpdateAt'] = new DateTime() ;
 
-            $teacherObj = $this->teacherService->add($teacherObj);
-         
+        $teacherObj = $this->teacherService->add($data);
 
-        $student = $serializer->serialize($teacherObj, 'json');
-        $response = new Response($student);
+        if ($teacherObj) {
+            $student = $this->serializer->serialize($teacherObj, 'json');
+            $response = new Response($student);
 
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
-
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
+        return new JsonResponse(['status' => 'Please fill all Field']);
     }
 
     /**
      * @Route("/teacher/update/{id}", name="teacherupdate",methods={"PUT"})
      */
-    public function update(Request $request, int $id,SerializerInterface $serializer)
+    public function update(Request $request, int $id)
     {
         $data = json_decode($request->getContent(), true);
 
-        $args=[
-            'id'=>$id
+        $args = [
+            'id' => $id,
         ];
         $teacher = $this->teacherService->getAll($args);
 
-        $teacherObj['Name']= $data['_name'];
-        $teacherObj['Salary'] = $data['_salary'];
-        $teacherObj['Designation']= $data['_designation'];
-        $teacherObj['Class']= $data['_studentclass'];
-
-
-        $teacherObj['UpdateAt'] = new DateTime();
-        if (($teacherObj['Name'] != '') && ($teacherObj['Salary'] != '') && ($teacherObj['Class'] != '')) {
-            $teacherObj = $this->teacherService->edit($teacherObj, $id);
+        $data['UpdateAt'] = new DateTime();
+        if (($data['_name'] != '') && ($data['_salary'] != '') && ($data['_designation'] != '')) {
+            $teacherObj = $this->teacherService->edit($data, $id);
             if ($teacherObj) {
-                 $teacher=$this->teacherService->getAll($args);
-             
-                $teacher = $serializer->serialize($teacher, 'json');
+                $teacher = $this->teacherService->getAll($args);
+
+                $teacher = $this->serializer->serialize($teacher, 'json');
                 $response = new Response($teacher);
-        
+
                 $response->headers->set('Content-Type', 'application/json');
                 return $response;
-                    
 
             }
 
@@ -100,51 +87,76 @@ class TeacherController extends AbstractController
     /**
      * @Route("/teacher/delete/{id}", name="teacherdelete",methods={"DELETE"})
      */
-    function delete(int $id,SerializerInterface $serializer) 
+    public function delete(int $id)
     {
-        $args=[
-            'id'=>$id
+        $args = [
+            'id' => $id,
         ];
-        $student =$this->teacherService->getAll($args);
+        $student = $this->teacherService->getAll($args);
         $result = $this->teacherService->delete($student);
-        if ($result=="Done") {
-            
+        if ($result == "Done") {
+
             return new JsonResponse(['status' => 'Teacher Delete'], Response::HTTP_OK);
-     
+
         }
         return new JsonResponse(['status' => 'teacher Not Avaliable'], Response::HTTP_OK);
     }
-        
+
     /**
      * @Route("/teacher/list", name="teacherlist")
      */
-    function teacherList(SerializerInterface $serializer)
+    public function teacherList()
     {
         $teacher = $this->teacherService->getAll();
 
         if (!empty($teacher)) {
-           
-            $teacher = $serializer->serialize($teacher, 'json');
+
+            $teacher = $this->serializer->serialize($teacher, 'json');
             $response = new Response($teacher);
-    
+
             $response->headers->set('Content-Type', 'application/json');
             return $response;
         }
-        return new JsonResponse(['status'=>'Teacher Not Avaliable']);
+        return new JsonResponse(['status' => 'Teacher Not Avaliable']);
     }
 
     /**
      * @Route("/teacher/search", name="teachersearch")
      */
-    function search(Request $request,SerializerInterface $serializer)
+    public function search(Request $request)
     {
         $search = $request->request->get('_search');
         $teacher = $this->teacherService->searchdata($search);
-        $teacher = $serializer->serialize($teacher, 'json');
+        $teacher = $this->serializer->serialize($teacher, 'json');
         $response = new Response($teacher);
 
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
 
+    /**
+     * @Route("/teacher/incerement", name="TeacherInc",methods={"GET"})
+     */
+    public function teacherInc(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+        $teacherIncerement = $this->teacherService->incerement($data['_increment']);
+        if ($teacherIncerement) {
+
+            $response = new JsonResponse(['Message' => "Teacher Salary changes"]);
+            // $teacher = $serializer->serialize($teachers, 'json');
+            // $response = new Response($teacher);
+
+            // $response->headers->set('Content-Type', 'application/json');
+            // return $response;
+            // $teacher = $serializer->serialize($teachers, 'json');
+            // $response = new Response($teacher);
+
+            // $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
+        $response = new JsonResponse(['Message' => "please pass a Increment in Percentage"]);
+        return $response;
+
+    }
 }

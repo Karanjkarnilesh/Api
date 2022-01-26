@@ -40,7 +40,6 @@ class StudentController extends AbstractController
 
         $response->headers->set('Content-Type', 'application/json');
         return $response;
-        // return new JsonResponse(['students' => $student, 'status' => 'Student List'], Response::HTTP_OK);
     }
     /**
      * @Route("/update/{id}", name="taskupdate",methods={"PUT"})
@@ -72,7 +71,6 @@ class StudentController extends AbstractController
 
             $response->headers->set('Content-Type', 'application/json');
             return $response;
-            // return new JsonResponse(['students' => $student, 'status' => 'Student update'], Response::HTTP_OK);
 
         }
 
@@ -92,7 +90,7 @@ class StudentController extends AbstractController
 
         $response->headers->set('Content-Type', 'application/json');
         return $response;
-        // return new JsonResponse(['status' => 'Student Deleted'], Response::HTTP_OK);
+    
     }
 
     /**
@@ -108,7 +106,7 @@ class StudentController extends AbstractController
 
         $response->headers->set('Content-Type', 'application/json');
         return $response;
-        // return new JsonResponse(['students' => $student, 'status' => 'Students '], Response::HTTP_OK);
+        
     }
 
     /**
@@ -140,7 +138,7 @@ class StudentController extends AbstractController
 
         $response->headers->set('Content-Type', 'application/json');
         return $response;
-        // return new JsonResponse( $student, Response::HTTP_OK);
+        
 
     }
 
@@ -161,7 +159,9 @@ class StudentController extends AbstractController
 
         $response->headers->set('Content-Type', 'application/json');
         return $response;
-        // return new JsonResponse(['teachers' => $teachers, 'status' => "Teacher For Class {$student_class}"], Response::HTTP_OK);
+    
     }
+
+  
 
 }
