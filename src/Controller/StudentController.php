@@ -2,23 +2,26 @@
 
 namespace App\Controller;
 
+use App\Controller\BaseController;
 use App\Entity\Student;
 use App\Entity\Teacher;
 use App\Repository\StudentRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class StudentController extends AbstractController
+class StudentController extends BaseController
 {
-    public function __construct(ManagerRegistry $doctrine, StudentRepository $studentRepository)
+    protected $doctrine;
+    protected $studentRepository;
+    protected $serializer;
+    public function __construct(ManagerRegistry $doctrine, StudentRepository $studentRepository, SerializerInterface $serializer)
     {
         $this->studentRepository = $studentRepository;
         $this->doctrine = $doctrine;
+        $this->serializer = $serializer;
     }
     /**
      * @Route("/task", name="task")
@@ -33,18 +36,21 @@ class StudentController extends AbstractController
      * @Route("/list", name="tasklist",methods={"GET"})
      */
 
-    function list(SerializerInterface $serializer) {
+    function list() {
         $student = $this->studentRepository->findAll();
-        $student = $serializer->serialize($student, 'json');
-        $response = new Response($student);
 
-        $response->headers->set('Content-Type', 'application/json');
+        $response = $this->responsiveJson($student);
         return $response;
+        // return $this->render('task/list.html.twig',[
+        //     'students'=>$student
+        // ]);
+
     }
     /**
      * @Route("/update/{id}", name="taskupdate",methods={"PUT"})
      */
-    public function update(int $id, Request $request, SerializerInterface $serializer)
+
+    public function update(int $id, Request $request)
     {
         $data = json_decode($request->getContent(), true);
         $entityManager = $this->doctrine->getManager();
@@ -66,53 +72,56 @@ class StudentController extends AbstractController
 
             $entityManager->flush();
             $student = $this->studentRepository->find(['id' => $student->getId()]);
-            $student = $serializer->serialize($student, 'json');
-            $response = new Response($student);
-
-            $response->headers->set('Content-Type', 'application/json');
+            $response = $this->responsiveJson($student);
             return $response;
+            // return $this->render('task/list.html.twig', [
+            //     'students' => $student,
+            // ]);
 
         }
-
-        return new JsonResponse(['status' => 'Pass value for Student '], Response::HTTP_OK);
+        // return $this->render('task/list.html.twig', [
+        //     'students' => $student,
+        // ]);
+        // return new JsonResponse(['status' => 'Pass value for Student '], Response::HTTP_OK);
     }
     /**
      * @Route("/delete/{id}", name="taskdelete",methods={"DELETE"})
      */
-    public function delete(int $id, SerializerInterface $serializer)
+    //
+    public function delete(int $id)
     {
         $entityManager = $this->doctrine->getManager();
         $student = $this->doctrine->getRepository(Student::class)->find($id);
         $entityManager->remove($student);
         $entityManager->flush();
-        $student = $serializer->serialize($student, 'json');
-        $response = new Response($student);
-
-        $response->headers->set('Content-Type', 'application/json');
+        $response = $this->responsiveJson($student);
         return $response;
-    
+        // return $this->render('task/list.html.twig',[
+        //     'students'=>$student
+        // ]);
+
     }
 
     /**
      * @Route("/search", name="tasksearch",methods={"GET"})
      */
-    public function search(Request $request,SerializerInterface $serializer)
+    //
+    public function search(Request $request)
     {
         $data = json_decode($request->getContent(), true);
         $search = $data["_search"];
         $student = $this->studentRepository->search($search);
-        $student = $serializer->serialize($student, 'json');
-        $response = new Response($student);
-
-        $response->headers->set('Content-Type', 'application/json');
+        $response = $this->responsiveJson($student);
         return $response;
-        
+        // return $this->render('task/list.html.twig',[
+        //     'students'=>$student
+        // ]);
     }
 
     /**
      * @Route("/add", name="taskadd",methods={"POST|GET"})
      */
-    public function add(Request $request,SerializerInterface $serializer): Response
+    public function add(Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
 
@@ -133,35 +142,30 @@ class StudentController extends AbstractController
         $entityManager->persist($student);
         $entityManager->flush();
         $student = $this->studentRepository->find(['id' => $student->getId()]);
-        $student = $serializer->serialize($student, 'json');
-        $response = new Response($student);
-
-        $response->headers->set('Content-Type', 'application/json');
+        $response = $this->responsiveJson($student);
         return $response;
-        
+        // return $this->render('task/list.html.twig',[
+        //     'students'=>$student
+        // ]);
 
     }
 
     /**
      * @Route("/getteacher/{id}", name="taskGetTeacher",methods={"GET"})
      */
-    public function getTeacher(Request $request, int $id,SerializerInterface $serializer)
+    //
+    public function getTeacher(Request $request, int $id)
     {
         $entityManager = $this->doctrine->getManager();
-
         $student = new Student();
-        // $teacher = new Teacher();
         $student = $this->doctrine->getRepository(Student::class)->find($id);
         $student_class = $student->getStudentClass();
         $teachers = $this->doctrine->getRepository(Teacher::class)->findBy(['class' => $student_class]);
-        $teacher = $serializer->serialize($teachers, 'json');
-        $response = new Response($teacher);
-
-        $response->headers->set('Content-Type', 'application/json');
+        $response = $this->responsiveJson($teachers);
         return $response;
-    
+        // return $this->render('task/teacherlist.html.twig',[
+        //     'teachers'=>$teachers
+        // ]);
     }
-
-  
 
 }

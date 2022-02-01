@@ -24,7 +24,7 @@ class TeacherService
             $teacher->setSalary($teacherargs['_salary']);
             $teacher->setDesignation($teacherargs['_designation']);
             $teacher->setCreateAt(new DateTime());
-            $teacher->setUpdateAt(new DateTime()) ;
+            $teacher->setUpdateAt(new DateTime());
             $price = $teacherargs['_salary'];
             if (strtolower($teacherargs['_designation']) == "developer") {
                 $price = $price = $price + (50 / 100) * $price;
@@ -53,7 +53,7 @@ class TeacherService
             $teacher->setSalary($data['_salary']);
             $teacher->setDesignation($data['_designation']);
             $teacher->setClass($data['_studentclass']);
-            $teacher->setUpdateAt(new DateTime()) ;
+            $teacher->setUpdateAt(new DateTime());
             $entityManager->persist($teacher);
             $entityManager->flush();
 
@@ -81,9 +81,10 @@ class TeacherService
         }
         return $this->doctrine->getRepository(Teacher::class)->findAll();
     }
+
     public function searchdata($search)
     {
-        $this->teacherRepository->search($search);
+       return  $this->teacherRepository->search($search);
     }
 
     public function incerement($designation)

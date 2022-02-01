@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Teacher;
 use App\Service\TeacherService;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,8 +15,7 @@ class TeacherController extends AbstractController
 {
 
     private $teacherService;
-    private $serializer;
-
+    protected $serializer;
     public function __construct(TeacherService $teacherService, SerializerInterface $serializer)
     {
         $this->teacherService = $teacherService;
@@ -79,10 +77,10 @@ class TeacherController extends AbstractController
             }
 
         }
-
-        return $this->render('teacher/edit.html.twig', [
-            'teacher' => $teacher,
-        ]);
+        return new JsonResponse(['status' => 'teacher Data Update Successfully '], Response::HTTP_OK);
+        // return $this->render('teacher/edit.html.twig', [
+        //     'teacher' => $teacher,
+        // ]);
     }
     /**
      * @Route("/teacher/delete/{id}", name="teacherdelete",methods={"DELETE"})
@@ -110,12 +108,14 @@ class TeacherController extends AbstractController
         $teacher = $this->teacherService->getAll();
 
         if (!empty($teacher)) {
-
-            $teacher = $this->serializer->serialize($teacher, 'json');
-            $response = new Response($teacher);
+            $student = $this->serializer->serialize($teacher, 'json');
+            $response = new Response($student);
 
             $response->headers->set('Content-Type', 'application/json');
             return $response;
+            // return $this->render('teacher/list.html.twig',[
+            //     'students'=>$teacher
+            // ]);
         }
         return new JsonResponse(['status' => 'Teacher Not Avaliable']);
     }
@@ -125,13 +125,20 @@ class TeacherController extends AbstractController
      */
     public function search(Request $request)
     {
-        $search = $request->request->get('_search');
+        $data = json_decode($request->getContent(), true);
+        // $search = $request->request->get('_search');
+        $search = $data['_search'];
+        
         $teacher = $this->teacherService->searchdata($search);
-        $teacher = $this->serializer->serialize($teacher, 'json');
-        $response = new Response($teacher);
+    
+        $student = $this->serializer->serialize($teacher, 'json');
+        $response = new Response($student);
 
         $response->headers->set('Content-Type', 'application/json');
         return $response;
+        // return $this->render('teacher/list.html.twig',[
+        //         'students'=>$teacher
+        //     ]);
     }
 
     /**
@@ -144,15 +151,7 @@ class TeacherController extends AbstractController
         if ($teacherIncerement) {
 
             $response = new JsonResponse(['Message' => "Teacher Salary changes"]);
-            // $teacher = $serializer->serialize($teachers, 'json');
-            // $response = new Response($teacher);
 
-            // $response->headers->set('Content-Type', 'application/json');
-            // return $response;
-            // $teacher = $serializer->serialize($teachers, 'json');
-            // $response = new Response($teacher);
-
-            // $response->headers->set('Content-Type', 'application/json');
             return $response;
         }
         $response = new JsonResponse(['Message' => "please pass a Increment in Percentage"]);
