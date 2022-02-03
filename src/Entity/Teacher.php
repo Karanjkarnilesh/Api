@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\TeacherRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=TeacherRepository::class)
@@ -20,7 +21,7 @@ class Teacher
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255,nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $name;
 
@@ -30,23 +31,28 @@ class Teacher
     private $salary;
 
     /**
-     * @ORM\Column(type="string", length=255,nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $designation;
 
     /**
-     * @ORM\Column(type="string", length=255,nullable=true)
+     * @Assert\Range(
+     *      min = 1,
+     *      max = 12,
+     *      notInRangeMessage = "You must be between {{ min }}cm and {{ max }}cm tall to enter",
+     * )
+     * @ORM\Column(type="string", length=255)
      */
     private $class;
 
     /**
-     * @ORM\Column(type="datetime", length=255,nullable=true)
+     * @ORM\Column(type="datetime", length=255)
      * * @var string A "Y-m-d H:i:s" formatted value
      */
     private $create_at;
 
     /**
-     * @ORM\Column(type="datetime", length=255,nullable=true)
+     * @ORM\Column(type="datetime", length=255)
      */
     private $update_at;
 
@@ -109,7 +115,6 @@ class Teacher
         return $this;
     }
 
-
     public function setCreateAt($create_at): self
     {
         $this->create_at = $create_at;
@@ -121,7 +126,7 @@ class Teacher
     {
         return ($this->create_at);
     }
-  
+
     public function setUpdateAt($update_at): self
     {
         $this->update_at = $update_at;
@@ -143,7 +148,6 @@ class Teacher
     //     $this->student=$student;
     //     return $this;
     // }
-
 
     // /**
     //  * @ORM\PrePersist

@@ -1,11 +1,7 @@
 {% include "base.html.twig" %}
-<pre>
-
-</pre>
 <div class="example-wrapper">
 <div class="container p-4">
-<h1>Teache About</h1>
-
+<h1>About Teacher</h1>
  <table class="table">
   <thead>
     <tr>
@@ -16,21 +12,18 @@
     </tr>
   </thead>
   <tbody>
-  {% for key,teacher in teachers %}
-  {# {% if (teacher.getStudentClass()) %} #}
-  <tr>
-  <td>{{teacher.getId()}}</td>
-  <td>{{teacher.getName()}}</td>
-  {# {{dump(teacher.getSalary())}} #}
-  <td>{{teacher.getDesignation()}}</td>
-  <td>{{teacher.getClass()}}</td>
-  </tr>
-  
-  {# {% endif %} #}
-{% else %}
-     
+  {% if (teachers is defined) %}
+    {% for key,teacher in teachers %}
+    <tr>
+    <td>{{teacher.getId()}}</td>
+    <td>{{teacher.getName()}}</td>
+    <td>{{teacher.getDesignation()}}</td>
+    <td>{{teacher.getClass()}}</td>
+    </tr>
     {% endfor %}
-   
+  {% else %}
+  {{teacherError}}
+  {% endif %}   
   </tbody>
 </table>
 </div>

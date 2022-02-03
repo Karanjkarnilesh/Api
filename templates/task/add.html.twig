@@ -9,19 +9,19 @@
 <form method="post" action="{{ path('taskadd') }}">
   <div class="mb-3">
     <label for="exampleInputusername" class="form-label">Username</label>
-    <input type="text" class="form-control" name="_username"  id="exampleInputusername" aria-describedby="emailHelp">
+    <input type="text" class="form-control" name="_username"  id="exampleInputusername" aria-describedby="emailHelp" required>
   </div>
    <div class="mb-3">
     <label for="exampleInputlast" class="form-label">Lastname</label>
-    <input type="text" name="_lastname" class="form-control" id="exampleInputlast" aria-describedby="emailHelp">
+    <input type="text" name="_lastname" class="form-control" id="exampleInputlast" aria-describedby="emailHelp" required>
   </div>
    <div class="mb-3">
     <label for="exampleInputEmail1" class="form-label">Email</label>
-    <input type="email" name="_email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+    <input type="email" name="_email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="example@gmail.com" required>
   </div>
    <div class="mb-3">
     <label for="exampleInputClass" class="form-label">Class</label>
-    <input type="text" name="_studentclass" class="form-control" id="exampleInputClass" >
+    <input type="text" name="_studentclass" class="form-control" id="exampleInputClass" min="1" max="12" required>
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 

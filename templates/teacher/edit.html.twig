@@ -15,19 +15,19 @@
 <form method="post" action="{{ path('teacherupdate',{'id':teacher.getId()}) }}">
   <div class="mb-3">
     <label for="exampleInputusername" class="form-label">Name</label>
-    <input type="text" class="form-control" name="_name" value="{{teacher.getName()}}"  id="exampleInputusername" aria-describedby="emailHelp">
+    <input type="text" class="form-control" name="_name" value="{{teacher.getName()}}"  id="exampleInputusername" aria-describedby="emailHelp" required>
   </div>
    <div class="mb-3">
     <label for="exampleInputlast" class="form-label">Salary</label>
-    <input type="text" name="_salary" class="form-control" value="{{teacher.getSalary()}}"  id="exampleInputlast" aria-describedby="emailHelp">
+    <input type="text" name="_salary" class="form-control" value="{{teacher.getSalary()}}"  id="exampleInputlast" aria-describedby="emailHelp" required>
   </div>
    <div class="mb-3">
     <label for="exampleInputEmail1" class="form-label">Designation</label>
-    <input type="text" name="_designation" class="form-control" value="{{teacher.getDesignation()}}"  id="exampleInputEmail1" aria-describedby="emailHelp">
+    <input type="text" name="_designation" class="form-control" value="{{teacher.getDesignation()}}"  id="exampleInputEmail1" aria-describedby="emailHelp" required>
   </div>
    <div class="mb-3">
     <label for="exampleInputClass" class="form-label">Class</label>
-    <input type="text" name="_teacherclass" class="form-control"  value="{{teacher.getClass()}}"  id="exampleInputClass" >
+    <input type="text" name="_teacherclass" class="form-control"  value="{{teacher.getClass()}}" min="1"  max="12" id="exampleInputClass" required>
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 

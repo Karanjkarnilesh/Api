@@ -37,7 +37,6 @@ class TeacherController extends AbstractController
     public function create(Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
-
         $teacherObj = $this->teacherService->add($data);
 
         if ($teacherObj) {
@@ -46,6 +45,7 @@ class TeacherController extends AbstractController
 
             $response->headers->set('Content-Type', 'application/json');
             return $response;
+         
         }
         return new JsonResponse(['status' => 'Please fill all Field']);
     }
@@ -78,9 +78,6 @@ class TeacherController extends AbstractController
 
         }
         return new JsonResponse(['status' => 'teacher Data Update Successfully '], Response::HTTP_OK);
-        // return $this->render('teacher/edit.html.twig', [
-        //     'teacher' => $teacher,
-        // ]);
     }
     /**
      * @Route("/teacher/delete/{id}", name="teacherdelete",methods={"DELETE"})
@@ -113,9 +110,7 @@ class TeacherController extends AbstractController
 
             $response->headers->set('Content-Type', 'application/json');
             return $response;
-            // return $this->render('teacher/list.html.twig',[
-            //     'students'=>$teacher
-            // ]);
+         
         }
         return new JsonResponse(['status' => 'Teacher Not Avaliable']);
     }
@@ -126,19 +121,15 @@ class TeacherController extends AbstractController
     public function search(Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        // $search = $request->request->get('_search');
         $search = $data['_search'];
         
         $teacher = $this->teacherService->searchdata($search);
-    
         $student = $this->serializer->serialize($teacher, 'json');
         $response = new Response($student);
 
         $response->headers->set('Content-Type', 'application/json');
         return $response;
-        // return $this->render('teacher/list.html.twig',[
-        //         'students'=>$teacher
-        //     ]);
+   
     }
 
     /**

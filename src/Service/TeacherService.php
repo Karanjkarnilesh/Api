@@ -14,14 +14,14 @@ class TeacherService
         $this->doctrine = $doctrine;
     }
 
-    public function add($teacherargs): array
+    public function add($teacherargs)
     {
         if (!empty($teacherargs)) {
-
             $entityManager = $this->doctrine->getManager();
             $teacher = new Teacher();
             $teacher->setName($teacherargs['_name']);
             $teacher->setSalary($teacherargs['_salary']);
+            // $teacher->setClass($teacherargs['_class']);
             $teacher->setDesignation($teacherargs['_designation']);
             $teacher->setCreateAt(new DateTime());
             $teacher->setUpdateAt(new DateTime());
@@ -40,7 +40,7 @@ class TeacherService
             $teacher = $this->getAll();
             return $teacher;
         }
-
+        return;
     }
 
     public function edit($data, int $id)
